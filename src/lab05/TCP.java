@@ -10,24 +10,20 @@ import java.net.Socket;
 
 public class TCP {
 
-	private ServerSocket listenSocket;
 	private Socket sock;
 	private String usuario;
 
 	public TCP(int usuario, String senha) throws IOException {
 		this.usuario = usuario + ":" + senha;
 		// Cria um socket TCP para conexão com localhost:8000
-		Socket sock = new Socket("larc.inf.furb.br", 1012);
-
-		// Prepara um buffer para receber dados de um cliente
-		InputStreamReader s = new InputStreamReader(sock.getInputStream());
-		BufferedReader rec = new BufferedReader(s);
+		sock = new Socket("larc.inf.furb.br", 1012);
 	}
 	
 
 	public void sendMessage(String mensagem) throws IOException {
 		DataOutputStream d = new DataOutputStream(sock.getOutputStream());
 		String sBuf = mensagem + " " + usuario + "\n\r";
+		System.out.println(sBuf);
 		d.write(sBuf.getBytes("UTF-8"));
 
 	}
@@ -40,9 +36,9 @@ public class TCP {
 	public String receiveMessage() throws IOException {
 		InputStreamReader s = new InputStreamReader(sock.getInputStream());
 		BufferedReader rec = new BufferedReader(s);
-
+		String log = rec.readLine();
 		// Lê os dados enviados pela aplicação servidora
-		return rec.readLine();
+		return log;
 	}
 	
 	public void getMessage(){
