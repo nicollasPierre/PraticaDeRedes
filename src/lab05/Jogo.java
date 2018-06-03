@@ -43,10 +43,12 @@ public class Jogo {
             };
 
             Thread run = new Thread() {
+                boolean jogar = true;
                 @Override
                 public void run() {
+                    
                     try {
-                        while (true) {
+                        while (jogar) {
                             Thread.sleep(1000);
                             String playerList = tcp.sendAndReceiveMessage("GET PLAYERS ");
                             if (playerList.contains(usuario + ":GETTING")) {
@@ -55,12 +57,15 @@ public class Jogo {
                                     System.out.println("1 - Comprar carta");
                                     System.out.println("2 - Parar de comprar carta");
                                     System.out.println("M - Enviar uma menssagem para um usario");
-                                    System.out.println("Q - Sair do JOGO");
+                                    System.out.println("Q - Sair");
                                     Scanner rec = new Scanner(System.in);
                                     mensagem = rec.nextLine();
 
                                     if (mensagem.equals("1")) {
                                         System.out.println(tcp.sendAndReceiveMessage("GET CARD"));
+                                        //Adicionado pois, o player só pode pegar uma carta por vez.(?)
+                                        //Com isso ele sai do while e espera a proxima vez
+                                        mensagem = "2";
                                     }
                                     if (mensagem.equalsIgnoreCase("M")) {
                                         Scanner scanner = new Scanner(System.in);
@@ -73,6 +78,7 @@ public class Jogo {
                                     }
                                     if (mensagem.equalsIgnoreCase("Q")) {
                                         udp.sendMessage("SEND GAME", "QUIT");
+                                        jogar = false;
                                         break;
                                     } else {
                                         udp.sendMessage("SEND GAME", "STOP");
@@ -80,6 +86,8 @@ public class Jogo {
                                 }
                             }
                         }
+                        //Faz tudo fechar 
+                        System.exit(0);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

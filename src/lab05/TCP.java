@@ -10,53 +10,54 @@ import java.net.Socket;
 
 public class TCP {
 
-	private Socket sock;
-	private String usuario;
+    private Socket sock;
+    private String usuario;
 
-	public TCP(int usuario, String senha) throws IOException {
-		this.usuario = usuario + ":" + senha;
-		// Cria um socket TCP para conexão com localhost:8000
-		sock = new Socket("larc.inf.furb.br", 1012);
-	}
-	
+    public TCP(int usuario, String senha) throws IOException {
+        this.usuario = usuario + ":" + senha;
+        // Cria um socket TCP para conexï¿½o com localhost:8000
+        sock = new Socket("larc.inf.furb.br", 1012);
+    }
 
-	public void sendMessage(String mensagem) throws IOException {
-		DataOutputStream d = new DataOutputStream(sock.getOutputStream());
-		String sBuf = mensagem + " " + usuario + "\n\r";
-		System.out.println(sBuf);
-		d.write(sBuf.getBytes("UTF-8"));
+    public void sendMessage(String mensagem) throws IOException {
+        DataOutputStream d = new DataOutputStream(sock.getOutputStream());
+        String sBuf = mensagem + " " + usuario + "\n\r";
+        //System.out.println(sBuf);
+        d.write(sBuf.getBytes("UTF-8"));
 
-	}
-	
-	public String sendAndReceiveMessage(String mensagem) throws IOException {
-		sendMessage(mensagem);
-		return receiveMessage();
-	}
+    }
 
-	public String receiveMessage() throws IOException {
-		InputStreamReader s = new InputStreamReader(sock.getInputStream());
-		BufferedReader rec = new BufferedReader(s);
-		String log = rec.readLine();
-		// Lê os dados enviados pela aplicação servidora
-		return log;
-	}
-	
-	public void getMessage(){
-		try {
-			System.out.println(sendAndReceiveMessage("GET MESSAGE"));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
-	
-	public void keepAlive(){
-		try {
-			System.out.println(sendAndReceiveMessage("GET USERS"));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+    public String sendAndReceiveMessage(String mensagem) throws IOException {
+        sendMessage(mensagem);
+        return receiveMessage();
+    }
+
+    public String receiveMessage() throws IOException {
+        InputStreamReader s = new InputStreamReader(sock.getInputStream());
+        BufferedReader rec = new BufferedReader(s);
+        String log = rec.readLine();
+        // Lï¿½ os dados enviados pela aplicaï¿½ï¿½o servidora
+        return log;
+    }
+
+    public void getMessage() {
+        try {
+            String resposta = sendAndReceiveMessage("GET MESSAGE");
+            if(!resposta.equalsIgnoreCase(":")){
+                System.out.println("Chat: "+resposta);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void keepAlive() {
+        try {
+            String resposta = sendAndReceiveMessage("GET USERS");
+//            System.out.println(resposta);
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
 }
