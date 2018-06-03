@@ -63,9 +63,6 @@ public class Jogo {
 
                                     if (mensagem.equals("1")) {
                                         System.out.println(tcp.sendAndReceiveMessage("GET CARD"));
-                                        //Adicionado pois, o player só pode pegar uma carta por vez.(?)
-                                        //Com isso ele sai do while e espera a proxima vez
-                                        mensagem = "2";
                                     }
                                     if (mensagem.equalsIgnoreCase("M")) {
                                         Scanner scanner = new Scanner(System.in);
@@ -80,7 +77,8 @@ public class Jogo {
                                         udp.sendMessage("SEND GAME", "QUIT");
                                         jogar = false;
                                         break;
-                                    } else {
+                                    } 
+                                    if (mensagem.equalsIgnoreCase("2")){
                                         udp.sendMessage("SEND GAME", "STOP");
                                     }
                                 }
