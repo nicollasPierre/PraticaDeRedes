@@ -52,7 +52,9 @@ public class Jogo {
                             Thread.sleep(1000);
                             String playerList = tcp.sendAndReceiveMessage("GET PLAYERS ");
                             if (playerList.contains(usuario + ":GETTING")) {
+                                System.out.println("Rodada nova!");
                                 String mensagem = "";
+                                int mao = 0;
                                 while (!mensagem.equals("2")) {
                                     System.out.println("1 - Comprar carta");
                                     System.out.println("2 - Parar de comprar carta");
@@ -62,7 +64,18 @@ public class Jogo {
                                     mensagem = rec.nextLine();
 
                                     if (mensagem.equals("1")) {
-                                        System.out.println(tcp.sendAndReceiveMessage("GET CARD"));
+                                        String resposta = tcp.sendAndReceiveMessage("GET CARD");
+//                                        mao += Integer.parseInt(resposta.substring(0, resposta.indexOf(":")));
+                                        switch(resposta.substring(0, resposta.indexOf(":"))){
+                                            case "A": mao += 1; break;
+                                            case "J":
+                                            case "Q":
+                                            case "K": mao += 10; break;
+                                            default: mao += Integer.parseInt(resposta.substring(0, resposta.indexOf(":")));
+                                        }
+                                                
+                                        System.out.println(resposta);
+                                        System.out.println("Mão atual: "+mao);
                                     }
                                     if (mensagem.equalsIgnoreCase("M")) {
                                         Scanner scanner = new Scanner(System.in);
